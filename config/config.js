@@ -1,11 +1,11 @@
 let APP_CONFIG = {
-  'DEMO_APP_CLIENT_ID': 'STG-200413421N-SLTG-AUTOCONNECT-LOANAPPLN',
-  'DEMO_APP_CLIENT_SECRET': 'JpQEh1PdIzIlXpTBRhXZfsqu6KVAtIbE',
+  'DEMO_APP_CLIENT_ID': 'STG-200413421N-SLTG-RAIN-ADDVEHICLE',
+  'DEMO_APP_CLIENT_SECRET': 'X3li0cxMqiAWYxxYsRA0swG1jzmL2vcc',
   'DEMO_APP_CLIENT_SECURE_CERT': './cert/autonet.stg.pfx',
   'DEMO_APP_CLIENT_SECURE_CERT_PASSPHRASE': 'Netrust88798!',
   'DEMO_APP_CALLBACK_URL': 'http://localhost:3001/callback',
   'DEMO_APP_PURPOSE': 'demonstrating MyInfo APIs',
-  'DEMO_APP_SCOPES': 'uinfin,name,sex,race,nationality,dob,email,mobileno,regadd',
+  'DEMO_APP_SCOPES': 'vehicles.vehicleno,vehicles.type,vehicles.iulabelno,vehicles.make,vehicles.model,vehicles.chassisno,vehicles.engineno',
   'MYINFO_API_AUTHORISE': {
     'SANDBOX': 'https://sandbox.api.myinfo.gov.sg/com/v3/authorise',
     'TEST': 'https://test.api.myinfo.gov.sg/com/v3/authorise'

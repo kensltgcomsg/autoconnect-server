@@ -77,8 +77,8 @@ app.get('/callback', function (req, res) {
 });
 
 
-// getPersonData function - call MyInfo Token + Person API
-app.post('/getPersonData', function (req, res, next) {
+// getVehicles function - call MyInfo Token + Person API
+app.post('/getVehicles', function (req, res, next) {
 
   try {
     // get variables from frontend
@@ -94,15 +94,15 @@ app.post('/getPersonData', function (req, res, next) {
     console.log("Calling MyInfo NodeJs Library...".green);
 
     connector.getMyInfoPersonData(authCode, state, txnNo)
-      .then(personData => {
+      .then(vehicles => {
         
         /* 
         P/s: Your logic to handle the person data ...
         */
 
         console.log('--- Sending Person Data From Your-Server (Backend) to Your-Client (Frontend)---:'.green);
-        console.log(JSON.stringify(personData)); // log the data for demonstration purpose only
-        res.status(200).send(personData); //return personData
+        console.log(JSON.stringify(vehicles)); // log the data for demonstration purpose only
+        res.status(200).send(vehicles); //return vehicles
       })
       .catch(error => {
         console.log("---MyInfo NodeJs Library Error---".red);
