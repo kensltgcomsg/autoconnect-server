@@ -1,11 +1,11 @@
 let APP_CONFIG = {
-  'DEMO_APP_CLIENT_ID': 'STG2-MYINFO-DEMO-APP',
-  'DEMO_APP_CLIENT_SECRET': 'outzuu7n3bxzcvdyrv98y3picshnkydf1r4ybwas',
-  'DEMO_APP_CLIENT_SECURE_CERT': './cert/your-sample-app-certificate.p12',
-  'DEMO_APP_CLIENT_SECURE_CERT_PASSPHRASE': 'DemoApp',
+  'DEMO_APP_CLIENT_ID': 'STG-200413421N-SLTG-AUTOCONNECT-LOANAPPLN',
+  'DEMO_APP_CLIENT_SECRET': 'JpQEh1PdIzIlXpTBRhXZfsqu6KVAtIbE',
+  'DEMO_APP_CLIENT_SECURE_CERT': './cert/autonet.stg.pfx',
+  'DEMO_APP_CLIENT_SECURE_CERT_PASSPHRASE': 'Netrust88798!',
   'DEMO_APP_CALLBACK_URL': 'http://localhost:3001/callback',
   'DEMO_APP_PURPOSE': 'demonstrating MyInfo APIs',
-  'DEMO_APP_SCOPES': 'uinfin,name,sex,race,nationality,dob,email,mobileno,regadd,housingtype,hdbtype,marital,edulevel,noa-basic,ownerprivate,cpfcontributions,cpfbalances',
+  'DEMO_APP_SCOPES': 'uinfin,name,sex,race,nationality,dob,email,mobileno,regadd',
   'MYINFO_API_AUTHORISE': {
     'SANDBOX': 'https://sandbox.api.myinfo.gov.sg/com/v3/authorise',
     'TEST': 'https://test.api.myinfo.gov.sg/com/v3/authorise'
@@ -24,7 +24,7 @@ let APP_CONFIG = {
 //Set following configuration for MyInfo library to call token and person API
 // IMPORTANT: DO NOT rename the JSON Keys
 let MYINFO_CONNECTOR_CONFIG = {
-  'MYINFO_SIGNATURE_CERT_PUBLIC_CERT': './cert/staging-myinfo-public-cert.pem',
+  'MYINFO_SIGNATURE_CERT_PUBLIC_CERT': './cert/pub.stg.consent.myinfo.gov.sg.cer',
 
   'CLIENT_ID': APP_CONFIG.DEMO_APP_CLIENT_ID, //Client id provided during onboarding
   'CLIENT_SECRET': APP_CONFIG.DEMO_APP_CLIENT_SECRET, //Client secret provided during onboarding
