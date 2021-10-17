@@ -32,7 +32,7 @@ app.get('/', function (req, res) {
 });
 
 // get the environment variables (app info) from the config
-app.get('/getEnv', function (req, res) {
+app.get('/getVehiclesEnv', function (req, res) {
 
   try {
     var environment = process.argv[2].toUpperCase(); // get from package.json process argument
@@ -40,26 +40,65 @@ app.get('/getEnv', function (req, res) {
     if (environment == "SANDBOX") {
       // overwrite the Environment, Token URL and Person URL if Environemnt is 'Sandbox'. 
       // 'Sandbox' environment doesn't have Payload Encryption & PKI Digital Signature
-      config.MYINFO_CONNECTOR_CONFIG.ENVIRONMENT = environment;
-      config.MYINFO_CONNECTOR_CONFIG.TOKEN_URL = config.APP_CONFIG.MYINFO_API_TOKEN[environment];
-      config.MYINFO_CONNECTOR_CONFIG.PERSON_URL = config.APP_CONFIG.MYINFO_API_PERSON[environment];
+      config.VEHICLES_MYINFO_CONNECTOR_CONFIG.ENVIRONMENT = environment;
+      config.VEHICLES_MYINFO_CONNECTOR_CONFIG.TOKEN_URL = config.VEHICLES_APP_CONFIG.MYINFO_API_TOKEN[environment];
+      config.VEHICLES_MYINFO_CONNECTOR_CONFIG.PERSON_URL = config.VEHICLES_APP_CONFIG.MYINFO_API_PERSON[environment];
       console.log("Payload Encryption & PKI Digital Signature:".yellow, "Disabled".grey,"(Sandbox Env)");
     } else {
       console.log("Payload Encryption & PKI Digital Signature:".yellow, "Enabled".green,"(Test Env)");
     }
 
-    if (config.APP_CONFIG.DEMO_APP_CLIENT_ID == undefined || config.APP_CONFIG.DEMO_APP_CLIENT_ID == null) {
+    if (config.VEHICLES_APP_CONFIG.CLIENT_ID == undefined || config.VEHICLES_APP_CONFIG.CLIENT_ID == null) {
       res.status(500).send({
         "error": "Missing Client ID"
       });
     } else {
       res.status(200).send({
-        "clientId": config.APP_CONFIG.DEMO_APP_CLIENT_ID,
-        "redirectUrl": config.APP_CONFIG.DEMO_APP_CALLBACK_URL,
-        "attributes": config.APP_CONFIG.DEMO_APP_SCOPES,
-        "purpose": config.APP_CONFIG.DEMO_APP_PURPOSE,
+        "clientId": config.VEHICLES_APP_CONFIG.CLIENT_ID,
+        "attributes": config.VEHICLES_APP_CONFIG.SCOPES,
+        "purpose": config.VEHICLES_APP_CONFIG.PURPOSE,
         "environment": environment,
-        "authApiUrl": config.APP_CONFIG.MYINFO_API_AUTHORISE[environment],
+        "redirectUrl": config.CONFIG.CALLBACK_URL,
+        "authApiUrl": config.CONFIG.MYINFO_API_AUTHORISE[environment],
+      });
+    }
+  } catch (error) {
+    console.log("Error".red, error);
+    res.status(500).send({
+      "error": error
+    });
+  }
+});
+
+// get the environment variables (app info) from the config
+app.get('/getPersonEnv', function (req, res) {
+
+  try {
+    var environment = process.argv[2].toUpperCase(); // get from package.json process argument
+    // console.log("Environment:".yellow, environment);
+    if (environment == "SANDBOX") {
+      // overwrite the Environment, Token URL and Person URL if Environemnt is 'Sandbox'. 
+      // 'Sandbox' environment doesn't have Payload Encryption & PKI Digital Signature
+      config.PERSON_MYINFO_CONNECTOR_CONFIG.ENVIRONMENT = environment;
+      config.PERSON_MYINFO_CONNECTOR_CONFIG.TOKEN_URL = config.PERSON_APP_CONFIG.MYINFO_API_TOKEN[environment];
+      config.PERSON_MYINFO_CONNECTOR_CONFIG.PERSON_URL = config.PERSON_APP_CONFIG.MYINFO_API_PERSON[environment];
+      console.log("Payload Encryption & PKI Digital Signature:".yellow, "Disabled".grey,"(Sandbox Env)");
+    } else {
+      console.log("Payload Encryption & PKI Digital Signature:".yellow, "Enabled".green,"(Test Env)");
+    }
+
+    if (config.PERSON_APP_CONFIG.CLIENT_ID == undefined || config.PERSON_APP_CONFIG.CLIENT_ID == null) {
+      res.status(500).send({
+        "error": "Missing Client ID"
+      });
+    } else {
+      res.status(200).send({
+        "clientId": config.PERSON_APP_CONFIG.CLIENT_ID,
+        "attributes": config.PERSON_APP_CONFIG.SCOPES,
+        "purpose": config.PERSON_APP_CONFIG.PURPOSE,
+        "environment": environment,
+        "redirectUrl": config.CONFIG.CALLBACK_URL,
+        "authApiUrl": config.CONFIG.MYINFO_API_AUTHORISE[environment],
       });
     }
   } catch (error) {
@@ -90,7 +129,49 @@ app.post('/getVehicles', function (req, res, next) {
     // console.log("> State      : ", state);
     // console.log("> txnNo      : ", txnNo);
 
-    let connector = new MyInfoConnector(config.MYINFO_CONNECTOR_CONFIG);
+    let connector = new MyInfoConnector(config.VEHICLES_MYINFO_CONNECTOR_CONFIG);
+    console.log("Calling MyInfo NodeJs Library...".green);
+
+    connector.getMyInfoPersonData(authCode, state, txnNo)
+      .then(vehicles => {
+        
+        /* 
+        P/s: Your logic to handle the person data ...
+        */
+
+        console.log('--- Sending Person Data From Your-Server (Backend) to Your-Client (Frontend)---:'.green);
+        console.log(JSON.stringify(vehicles)); // log the data for demonstration purpose only
+        res.status(200).send(vehicles); //return vehicles
+      })
+      .catch(error => {
+        console.log("---MyInfo NodeJs Library Error---".red);
+        console.log(error);
+        res.status(500).send({
+          "error": error
+        });
+      });
+  } catch (error) {
+    console.log("Error".red, error);
+    res.status(500).send({
+      "error": error
+    });
+  }
+});
+
+// getVehicles function - call MyInfo Token + Person API
+app.post('/getPerson', function (req, res, next) {
+
+  try {
+    // get variables from frontend
+    var authCode = req.body.authCode;
+    var state = req.body.state;
+    var txnNo = crypto.randomBytes(10).toString("hex");
+
+    // console.log("> AuthCode   : ", authCode);
+    // console.log("> State      : ", state);
+    // console.log("> txnNo      : ", txnNo);
+
+    let connector = new MyInfoConnector(config.PERSON_MYINFO_CONNECTOR_CONFIG);
     console.log("Calling MyInfo NodeJs Library...".green);
 
     connector.getMyInfoPersonData(authCode, state, txnNo)
