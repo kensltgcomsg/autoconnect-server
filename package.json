@@ -4,7 +4,7 @@
   "description": "This is MyInfo Demo App",
   "main": "app.js",
   "scripts": {
-    "start": "npm run test",
+    "start": "node .",
     "test": "nodemon app.js test",
     "sandbox": "nodemon app.js sandbox"
   },
